@@ -84,7 +84,7 @@ TASKLY/                       # Raiz do projeto (Repositório Git)
 
 ### 1. Clonar o Repositório e Navegar
 ```bash
-git clone [https://github.com/seu-usuario/taskly.git](https://github.com/seu-usuario/taskly.git)
+git clone [https://github.com/TrytonJ5/taskly.git](https://github.com/TrytonJ5/taskly.git)
 cd taskly/BACKEND
 ```
 ### 2. Configurar o Ambiente (.env)
