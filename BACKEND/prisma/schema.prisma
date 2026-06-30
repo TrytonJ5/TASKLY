@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -10,4 +5,70 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+}
+
+enum StatusTarefa {
+  pendente
+  em_andamento
+  concluida
+}
+
+enum PrioridadeTarefa {
+  baixa
+  media
+  alta
+  urgente
+}
+
+model Usuario {
+  id        String   @id @default(uuid())
+  nome      String
+  email     String   @unique
+  senhaHash String   @map("senha_hash")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  tarefas          Tarefa[]
+  alteracoesFeitas HistoricoTarefa[] @relation("AlteradoPor")
+
+  @@map("usuarios")
+}
+
+model Tarefa {
+  id          String           @id @default(uuid())
+  usuarioId   String           @map("usuario_id")
+  titulo      String
+  descricao   String?
+  status      StatusTarefa     @default(pendente)
+  prioridade  PrioridadeTarefa @default(media)
+  responsavel String?
+  dataLimite  DateTime?        @map("data_limite")
+  createdAt   DateTime         @default(now()) @map("created_at")
+  updatedAt   DateTime         @updatedAt @map("updated_at")
+
+  usuario   Usuario           @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  historico HistoricoTarefa[]
+
+  @@index([usuarioId])
+  @@index([status])
+  @@index([prioridade])
+  @@index([dataLimite])
+  @@index([usuarioId, status])
+  @@map("tarefas")
+}
+
+model HistoricoTarefa {
+  id            String   @id @default(uuid())
+  tarefaId      String   @map("tarefa_id")
+  alteradoPor   String?  @map("alterado_por")
+  campoAlterado String   @map("campo_alterado")
+  valorAnterior String?  @map("valor_anterior")
+  valorNovo     String?  @map("valor_novo")
+  alteradoEm    DateTime @default(now()) @map("alterado_em")
+
+  tarefa  Tarefa   @relation(fields: [tarefaId], references: [id], onDelete: Cascade)
+  usuario Usuario? @relation("AlteradoPor", fields: [alteradoPor], references: [id], onDelete: SetNull)
+
+  @@index([tarefaId])
+  @@map("historico_tarefas")
 }
