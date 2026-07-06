@@ -6,41 +6,50 @@ Este repositório foi estruturado utilizando a estratégia de **Monorepo**, isol
 
 ---
 
-## 🎯 Status do Cronograma e Fases do Projeto
+## 🗺️ Mapa do Projeto & Status de Desenvolvimento
 
-O plano de desenvolvimento do Taskly foi dividido de forma cirúrgica em etapas incrementais. Atualmente, atingimos um marco crítico com a **conclusão da Fase 3**:
-
-* [x] **Fase 1: Arquitetura e Modelagem** — Definição do fluxo entre camadas (Controllers ➡️ Services ➡️ Repositories) e mapeamento das tabelas.
-* [x] **Fase 2: Setup do Projeto** — Estrutura de pastas unificada, configurações modernas do TypeScript (`nodenext`), ambientes locais e variáveis globais.
-* [x] **Fase 3: Backend - Autenticação & Autorização (Concluída 🚀)** — Implementação de rotas para cadastro, login, geração de tokens seguros, criptografia de credenciais e interceptação via middleware de proteção.
-* [ ] **Fase 4: Backend - CRUD de Tarefas** — Endpoints de manipulação, validações com Zod e histórico de auditoria em tempo real.
-* [ ] **Fase 5: Frontend Angular** — Desenvolvimento do cliente web (telas de login, dashboards reativos, filtros e consumo da API).
-* [ ] **Fase 6: Ajustes Finais & Testes Manuais** — Garantia de qualidade de ponta a ponta.
-* [ ] **Fase 7: Deploy & Entrega** — Publicação em nuvem (Render/Railway para o backend, Vercel/Netlify para o frontend Angular) e documentação de encerramento.
+- [x] **Etapa 1: Arquitetura e Modelagem** — Definição do banco PostgreSQL e schemas de dados.
+- [x] **Etapa 2: Setup do Projeto** — Inicialização do ambiente com TypeScript, Node e gerenciadores.
+- [x] **Etapa 3: Backend (Autenticação)** — Camada de segurança com JWT, hash de senhas e middlewares.
+- [x] **Etapa 4: Backend (CRUD de Tarefas)** — Endpoints completos, validações estritas (Zod) e persistência.
+- [➔] **Etapa 5: Frontend Angular** — **[VOCÊ ESTÁ AQUI]** Construção da interface SPA interativa e integração com a API.
+- [ ] **Etapa 6: Ajustes Finais** — Testes de ponta a ponta, tratamento global de exceções e refinamento.
+- [ ] **Etapa 7: Deploy & Documentação Final** — Publicação em ambiente de produção.
 
 ---
 
-## 📐 Arquitetura do Sistema e Fluxo de Dados (Fase 1 & 2)
+## ⚙️ Backend (Concluído)
 
-O ecossistema do servidor foi desenhado seguindo uma **Arquitetura Baseada em Módulos/Domínios**. Cada entidade de negócio possui isolamento estrito de suas camadas técnicas para garantir facilidade de testes e manutenibilidade:
+A API do Taskly foi desenhada seguindo princípios de arquitetura limpa, separação de responsabilidades por módulos e tipagem estática rigorosa para evitar falhas em tempo de execução.
 
-1. **Rotas (`routes`)**: Porta de entrada e mapeamento dos caminhos expostos pela API.
-2. **Middlewares**: Camada interceptadora global. Usada para autenticação JWT, tratamento global de falhas e validações.
-3. **Controllers**: Camada de transporte que recebe os dados HTTP (`req`, `res`), valida os formatos de entrada e despacha a execução.
-4. **Services**: O coração do software, onde as **regras de negócio** reais rolam de forma isolada do Express ou do banco de dados.
-5. **Repositories**: Abstração da camada de persistência. Comunica-se com o banco através do Prisma ORM.
+### 🛠️ Tecnologias Utilizadas
+* **Runtime:** Node.js v24+ com `tsx` (TypeScript Execute) para desenvolvimento ágil em memória.
+* **Linguagem:** TypeScript (Configuração estrita com `exactOptionalPropertyTypes` ativo).
+* **Framework Web:** Express.js.
+* **ORM:** Prisma Client conectado ao banco relacional **PostgreSQL**.
+* **Validação de Dados:** Zod (Mapeamento de payloads e prevenção de dados corrompidos).
+* **Segurança:** Autenticação via JSON Web Tokens (JWT) e criptografia de credenciais.
+
+### 🔒 Segurança e Variáveis de Ambiente
+O projeto faz uso isolado de variáveis de ambiente (`.env`). As credenciais sensíveis e segredos criptográficos **nunca** são expostos no repositório público, sendo gerenciados localmente e mapeados através do arquivo `.env.example`.
+
+### 🔀 Principais Endpoints Disponíveis
+* `POST /users/register` -> Criação de novas contas com validação de duplicidade.
+* `POST /users/login` -> Autenticação de usuários e geração de token JWT.
+* `POST /tasks` -> Criação de tarefas associadas ao usuário logado (Campos opcionais tratados estritamente como `null` no banco).
+* `GET /tasks` -> Listagem filtrada das tarefas.
+* `PATCH /tasks/:id` -> Atualizações parciais dinâmicas (Inputs `undefined` são expurgados programaticamente para integridade do ORM).
+* `DELETE /tasks/:id` -> Remoção segura de registros.
 
 ---
 
-## 🔒 Detalhes Técnicos da Fase 3: Autenticação & Autorização
+## 📐 Próxima Etapa: Frontend Angular 🚀
 
-A API agora conta com uma camada rigorosa de segurança nativa baseada nos padrões mais recomendados de segurança web:
+Com a nossa API RESTful totalmente operacional e protegida, o foco agora se volta para a aplicação cliente:
 
-* **Cadastro de Usuários:** Proteção contra vazamento de dados. As senhas enviadas nunca são gravadas em texto limpo no banco; elas passam por um processo de hash criptográfico de alta entropia alimentado pelo **BcryptJS**.
-* **Autenticação via JWT:** Ao realizar login com sucesso, a API gera um token **JSON Web Token (JWT)** criptografado com o segredo exclusivo da aplicação (`JWT_SECRET`).
-* **Middleware de Proteção de Rotas:** Desenvolvido para atuar como um guardião nas rotas privadas de tarefas. Ele intercepta as requisições HTTP, extrai o token enviado no cabeçalho (*Authorization Bearer*), valida sua integridade/expiração e injeta os dados do usuário autenticado diretamente na requisição para consumo seguro pelas camadas seguintes.
-
----
+1. **Setup do Workspace:** Criação do projeto via Angular CLI e estruturação de módulos/componentes standalones.
+2. **Integração de Recursos:** Avaliação do uso do **Angular CDK** para mecânicas complexas de interface (como comportamentos de arrastar e soltar cartões de tarefas) e controle fino de reatividade.
+3. **Gerenciamento de Estado e Rotas:** Criação de Guards de rotas para proteger as telas internas contra usuários não autenticados.
 
 ## 🛠️ Stack Tecnológica Atualizada
 
