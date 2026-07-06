@@ -1,0 +1,68 @@
+<div class="overlay" (click)="fechar()">
+  <div class="painel" (click)="$event.stopPropagation()" role="dialog" aria-label="Detalhes da tarefa">
+
+    <div class="painel-header">
+      <div class="titulo-row">
+        <h2>{{ tarefa.titulo }}</h2>
+        <span class="badge badge-atrasada" *ngIf="estaAtrasada()">Atrasada</span>
+      </div>
+      <button class="btn btn-ghost" (click)="fechar()" aria-label="Fechar">✕</button>
+    </div>
+
+    <p class="descricao" *ngIf="tarefa.descricao">{{ tarefa.descricao }}</p>
+
+    <div class="meta-grid">
+      <div class="meta-item">
+        <span class="meta-label">Status</span>
+        <span class="badge" [ngClass]="'badge-' + tarefa.status">
+          {{ tarefa.status === 'em_andamento' ? 'Em andamento' : tarefa.status === 'concluida' ? 'Concluída' : 'Pendente' }}
+        </span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Prioridade</span>
+        <span class="badge" [ngClass]="'badge-' + tarefa.prioridade">
+          {{ tarefa.prioridade | titlecase }}
+        </span>
+      </div>
+      <div class="meta-item" *ngIf="tarefa.responsavel">
+        <span class="meta-label">Responsável</span>
+        <span class="meta-valor">{{ tarefa.responsavel }}</span>
+      </div>
+      <div class="meta-item" *ngIf="tarefa.dataLimite">
+        <span class="meta-label">Data limite</span>
+        <span class="meta-valor" [class.atrasada]="estaAtrasada()">
+          {{ tarefa.dataLimite | date:'dd/MM/yyyy' }}
+        </span>
+      </div>
+    </div>
+
+    <div class="secao-historico">
+      <h3>Histórico de alterações</h3>
+
+      <div class="carregando" *ngIf="carregando()">Carregando...</div>
+
+      <div class="historico-vazio" *ngIf="!carregando() && historico().length === 0">
+        Nenhuma alteração registrada ainda.
+      </div>
+
+      <ul class="timeline" *ngIf="!carregando() && historico().length > 0">
+        <li *ngFor="let item of historico()">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <p class="timeline-descricao">
+              <strong>{{ labelCampo(item.campoAlterado) }}</strong> alterado
+              <span *ngIf="item.valorAnterior"> de <em>{{ item.valorAnterior }}</em></span>
+              <span *ngIf="item.valorNovo"> para <em>{{ item.valorNovo }}</em></span>
+            </p>
+            <span class="timeline-data">{{ formatarData(item.alteradoEm) }}</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="painel-footer">
+      <button class="btn btn-outline" (click)="fechar()">Fechar</button>
+      <button class="btn btn-primary" (click)="abrirEdicao()">Editar tarefa</button>
+    </div>
+  </div>
+</div>

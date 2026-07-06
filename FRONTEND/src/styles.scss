@@ -1,0 +1,202 @@
+/* ─── Reset e base ───────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* Paleta TASKLY */
+  --navy: #0d1b3e;
+  --navy-light: #162350;
+  --accent: #1a2f6b;
+  --accent-hover: #213a85;
+  --white: #ffffff;
+  --bg: #f4f6fb;
+  --surface: #ffffff;
+  --border: #e2e6f0;
+  --text: #0d1b3e;
+  --text-secondary: #5a6a8a;
+  --text-muted: #9aa5be;
+
+  /* Status */
+  --status-pendente-bg: #eef2ff;
+  --status-pendente-text: #4361b5;
+  --status-andamento-bg: #fff8e6;
+  --status-andamento-text: #b07d0a;
+  --status-concluida-bg: #e8faf3;
+  --status-concluida-text: #1a7a4a;
+
+  /* Prioridade */
+  --prio-alta-bg: #fdecea;
+  --prio-alta-text: #c0392b;
+  --prio-media-bg: #fff3e0;
+  --prio-media-text: #e07b00;
+  --prio-baixa-bg: #e8faf3;
+  --prio-baixa-text: #1a7a4a;
+
+  /* Atrasada */
+  --atrasada-bg: #fdecea;
+  --atrasada-text: #c0392b;
+
+  --radius: 10px;
+  --radius-sm: 6px;
+  --shadow: 0 2px 12px rgba(13, 27, 62, 0.08);
+  --shadow-md: 0 4px 20px rgba(13, 27, 62, 0.12);
+}
+
+html,
+body {
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  font-size: 15px;
+  color: var(--text);
+  background: var(--bg);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── Inputs e selects ───────────────────────────────────────────── */
+input,
+textarea,
+select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--text);
+  background: var(--surface);
+  outline: none;
+  transition: border-color 0.2s;
+
+  &:focus {
+    border-color: var(--accent);
+  }
+
+  &::placeholder {
+    color: var(--text-muted);
+  }
+}
+
+/* ─── Botões ─────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition: all 0.2s;
+  white-space: nowrap;
+
+  &-primary {
+    background: var(--navy);
+    color: var(--white);
+    border-color: var(--navy);
+
+    &:hover {
+      background: var(--accent-hover);
+      border-color: var(--accent-hover);
+    }
+  }
+
+  &-outline {
+    background: transparent;
+    color: var(--text);
+    border-color: var(--border);
+
+    &:hover {
+      border-color: var(--text-secondary);
+    }
+  }
+
+  &-ghost {
+    background: transparent;
+    color: var(--text-secondary);
+    border-color: transparent;
+    padding: 8px;
+
+    &:hover {
+      color: var(--text);
+      background: var(--bg);
+    }
+  }
+
+  &-danger {
+    background: transparent;
+    color: var(--atrasada-text);
+    border-color: transparent;
+
+    &:hover {
+      background: var(--atrasada-bg);
+    }
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+}
+
+/* ─── Badges ─────────────────────────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+
+  &-pendente {
+    background: var(--status-pendente-bg);
+    color: var(--status-pendente-text);
+  }
+  &-em_andamento {
+    background: var(--status-andamento-bg);
+    color: var(--status-andamento-text);
+  }
+  &-concluida {
+    background: var(--status-concluida-bg);
+    color: var(--status-concluida-text);
+  }
+  &-alta {
+    background: var(--prio-alta-bg);
+    color: var(--prio-alta-text);
+  }
+  &-media {
+    background: var(--prio-media-bg);
+    color: var(--prio-media-text);
+  }
+  &-baixa {
+    background: var(--prio-baixa-bg);
+    color: var(--prio-baixa-text);
+  }
+  &-atrasada {
+    background: var(--atrasada-bg);
+    color: var(--atrasada-text);
+  }
+}
+
+/* ─── Mensagem de erro de campo ──────────────────────────────────── */
+.field-error {
+  font-size: 12px;
+  color: var(--atrasada-text);
+  margin-top: 4px;
+}
+
+/* ─── Utilitários ────────────────────────────────────────────────── */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+}

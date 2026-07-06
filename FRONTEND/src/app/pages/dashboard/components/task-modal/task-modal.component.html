@@ -1,0 +1,83 @@
+<div class="overlay" (click)="fechar()">
+  <div class="modal" (click)="$event.stopPropagation()" role="dialog" [attr.aria-label]="titulo">
+    <div class="modal-header">
+      <h2>{{ titulo }}</h2>
+      <button class="btn btn-ghost" (click)="fechar()" aria-label="Fechar">✕</button>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="salvar()" novalidate>
+      <div class="field">
+        <label for="titulo">Título</label>
+        <input
+          id="titulo"
+          type="text"
+          formControlName="titulo"
+          placeholder="Ex: Revisar proposta do cliente"
+        />
+        <span class="field-error" *ngIf="form.get('titulo')?.invalid && form.get('titulo')?.touched">
+          Título deve ter pelo menos 3 caracteres
+        </span>
+      </div>
+
+      <div class="field">
+        <label for="descricao">Descrição</label>
+        <textarea
+          id="descricao"
+          formControlName="descricao"
+          placeholder="Detalhe o que precisa ser feito"
+          rows="3"
+        ></textarea>
+      </div>
+
+      <div class="row-2">
+        <div class="field">
+          <label for="status">Status</label>
+          <select id="status" formControlName="status">
+            <option value="pendente">Pendente</option>
+            <option value="em_andamento">Em andamento</option>
+            <option value="concluida">Concluída</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="prioridade">Prioridade</label>
+          <select id="prioridade" formControlName="prioridade">
+            <option value="baixa">Baixa</option>
+            <option value="media">Média</option>
+            <option value="alta">Alta</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row-2">
+        <div class="field">
+          <label for="responsavel">Responsável</label>
+          <input
+            id="responsavel"
+            type="text"
+            formControlName="responsavel"
+            placeholder="Nome do responsável"
+          />
+        </div>
+        <div class="field">
+          <label for="dataLimite">Data limite</label>
+          <input
+            id="dataLimite"
+            type="date"
+            formControlName="dataLimite"
+          />
+        </div>
+      </div>
+
+      <p class="erro-geral" *ngIf="erro()">{{ erro() }}</p>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" (click)="fechar()">
+          Cancelar
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="carregando()">
+          {{ carregando() ? 'Salvando...' : 'Salvar tarefa' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

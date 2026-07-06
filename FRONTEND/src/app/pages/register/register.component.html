@@ -1,0 +1,81 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <h1 class="logo">TASKLY</h1>
+    <p class="subtitle">Crie sua conta gratuita</p>
+
+    <form [formGroup]="form" (ngSubmit)="cadastrar()" novalidate>
+      <div class="field">
+        <label for="nome">Nome</label>
+        <input
+          id="nome"
+          type="text"
+          formControlName="nome"
+          placeholder="Seu nome completo"
+          autocomplete="name"
+        />
+        <span class="field-error" *ngIf="nome?.invalid && nome?.touched">
+          Nome deve ter pelo menos 2 caracteres
+        </span>
+      </div>
+
+      <div class="field">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          placeholder="nome@email.com"
+          autocomplete="email"
+        />
+        <span class="field-error" *ngIf="email?.invalid && email?.touched">
+          Email inválido
+        </span>
+      </div>
+
+      <div class="field">
+        <label for="senha">Senha</label>
+        <input
+          id="senha"
+          type="password"
+          formControlName="senha"
+          placeholder="Mínimo 8 caracteres"
+          autocomplete="new-password"
+        />
+        <span class="field-error" *ngIf="senha?.invalid && senha?.touched">
+          Senha deve ter pelo menos 8 caracteres
+        </span>
+      </div>
+
+      <div class="field">
+        <label for="confirmarSenha">Confirmar senha</label>
+        <input
+          id="confirmarSenha"
+          type="password"
+          formControlName="confirmarSenha"
+          placeholder="Repita a senha"
+          autocomplete="new-password"
+        />
+        <span
+          class="field-error"
+          *ngIf="form.errors?.['senhasDiferentes'] && confirmarSenha?.touched"
+        >
+          As senhas não coincidem
+        </span>
+      </div>
+
+      <p class="erro-geral" *ngIf="erro()">{{ erro() }}</p>
+
+      <button
+        type="submit"
+        class="btn btn-primary btn-full"
+        [disabled]="carregando()"
+      >
+        {{ carregando() ? 'Criando conta...' : 'Criar conta' }}
+      </button>
+    </form>
+
+    <p class="login-link">
+      Já tem conta? <a routerLink="/login">Entrar</a>
+    </p>
+  </div>
+</div>

@@ -1,0 +1,141 @@
+<div class="layout">
+
+  <!-- Header -->
+  <header class="header">
+    <h1 class="logo">TASKLY</h1>
+    <div class="usuario-info">
+      <div class="avatar" aria-hidden="true">{{ usuario()?.nome?.charAt(0)?.toUpperCase() }}</div>
+      <span class="usuario-nome">{{ usuario()?.nome }}</span>
+      <button class="btn btn-ghost btn-logout" (click)="logout()" title="Sair">
+        &#x2192;
+      </button>
+    </div>
+  </header>
+
+  <!-- Contadores do dashboard -->
+  <section class="contadores" aria-label="Resumo das tarefas">
+    <div class="contador-card">
+      <span class="contador-label">Pendentes</span>
+      <span class="contador-valor">{{ contadores().pendentes }}</span>
+    </div>
+    <div class="contador-card">
+      <span class="contador-label">Concluídas</span>
+      <span class="contador-valor">{{ contadores().concluidas }}</span>
+    </div>
+    <div class="contador-card atrasadas">
+      <span class="contador-label">Atrasadas</span>
+      <span class="contador-valor">{{ contadores().atrasadas }}</span>
+    </div>
+  </section>
+
+  <!-- Barra de ações: busca, filtros, botão novo -->
+  <div class="acoes">
+    <input
+      type="text"
+      class="busca"
+      placeholder="Buscar por título ou descrição..."
+      [(ngModel)]="buscaTexto"
+      (ngModelChange)="onBusca($event)"
+      aria-label="Buscar tarefas"
+    />
+
+    <select
+      aria-label="Filtrar por status"
+      (change)="aplicarFiltro('status', $any($event.target).value)"
+    >
+      <option value="">Status</option>
+      <option value="pendente">Pendente</option>
+      <option value="em_andamento">Em andamento</option>
+      <option value="concluida">Concluída</option>
+    </select>
+
+    <select
+      aria-label="Filtrar por prioridade"
+      (change)="aplicarFiltro('prioridade', $any($event.target).value)"
+    >
+      <option value="">Prioridade</option>
+      <option value="alta">Alta</option>
+      <option value="media">Média</option>
+      <option value="baixa">Baixa</option>
+    </select>
+
+    <button class="btn btn-primary" (click)="abrirModalCriacao()">
+      + Nova tarefa
+    </button>
+  </div>
+
+  <!-- Lista de tarefas -->
+  <main class="lista-container" aria-label="Lista de tarefas">
+
+    <div class="carregando" *ngIf="carregando()">Carregando tarefas...</div>
+
+    <div class="lista-vazia" *ngIf="!carregando() && tarefas().length === 0">
+      <p>Nenhuma tarefa encontrada.</p>
+      <button class="btn btn-primary" (click)="abrirModalCriacao()">
+        Criar primeira tarefa
+      </button>
+    </div>
+
+    <ul class="lista" *ngIf="!carregando() && tarefas().length > 0">
+      <li
+        class="tarefa-item"
+        *ngFor="let tarefa of tarefas()"
+        [class.atrasada]="estaAtrasada(tarefa)"
+      >
+        <div class="tarefa-info" (click)="abrirHistorico(tarefa)" role="button" tabindex="0">
+          <div class="tarefa-titulo">
+            {{ tarefa.titulo }}
+            <span class="badge badge-atrasada" *ngIf="estaAtrasada(tarefa)">Atrasada</span>
+          </div>
+          <div class="tarefa-meta">
+            <span *ngIf="tarefa.responsavel">{{ tarefa.responsavel }}</span>
+            <span *ngIf="tarefa.dataLimite">
+              até {{ tarefa.dataLimite | date:'dd/MM/yyyy' }}
+            </span>
+          </div>
+        </div>
+
+        <div class="tarefa-badges">
+          <span class="badge" [ngClass]="'badge-' + tarefa.prioridade">
+            {{ tarefa.prioridade | titlecase }}
+          </span>
+          <span class="badge" [ngClass]="'badge-' + tarefa.status">
+            {{ labelStatus(tarefa.status) }}
+          </span>
+        </div>
+
+        <div class="tarefa-acoes">
+          <button
+            class="btn btn-ghost"
+            (click)="abrirModalEdicao(tarefa)"
+            title="Editar"
+            aria-label="Editar tarefa"
+          >&#9998;</button>
+          <button
+            class="btn btn-danger"
+            (click)="confirmarExclusao(tarefa)"
+            title="Excluir"
+            aria-label="Excluir tarefa"
+          >&#128465;</button>
+        </div>
+      </li>
+    </ul>
+  </main>
+
+</div>
+
+<!-- Modal criar/editar -->
+<app-task-modal
+  *ngIf="modalAberto()"
+  [tarefa]="tarefaEmEdicao()"
+  (fechou)="fecharModal()"
+  (salvo)="aoSalvar()"
+/>
+
+<!-- Painel de histórico -->
+<app-task-history
+  *ngIf="tarefaHistorico()"
+  [tarefa]="tarefaHistorico()!"
+  (fechou)="fecharHistorico()"
+  (editar)="abrirModalEdicao($event)"
+/>

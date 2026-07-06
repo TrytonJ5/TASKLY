@@ -1,0 +1,53 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <h1 class="logo">TASKLY</h1>
+    <p class="subtitle">Organize suas tarefas com clareza</p>
+
+    <form [formGroup]="form" (ngSubmit)="entrar()" novalidate>
+      <div class="field">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          placeholder="nome@email.com"
+          autocomplete="email"
+        />
+        <span class="field-error" *ngIf="email?.invalid && email?.touched">
+          Email inválido
+        </span>
+      </div>
+
+      <div class="field">
+        <label for="senha">Senha</label>
+        <input
+          id="senha"
+          type="password"
+          formControlName="senha"
+          placeholder="••••••••"
+          autocomplete="current-password"
+        />
+        <span class="field-error" *ngIf="senha?.invalid && senha?.touched">
+          Senha deve ter pelo menos 8 caracteres
+        </span>
+      </div>
+
+      <p class="erro-geral" *ngIf="erro()">{{ erro() }}</p>
+
+      <button
+        type="submit"
+        class="btn btn-primary btn-full"
+        [disabled]="carregando()"
+      >
+        {{ carregando() ? 'Entrando...' : 'Entrar' }}
+      </button>
+    </form>
+
+    <button
+      class="btn btn-outline btn-full"
+      routerLink="/cadastro"
+    >
+      Criar conta
+    </button>
+  </div>
+</div>
