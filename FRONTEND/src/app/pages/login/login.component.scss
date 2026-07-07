@@ -60,3 +60,13 @@
   justify-content: center;
   margin-bottom: 10px;
 }
+
+.aviso {
+  font-size: 13px;
+  color: var(--status-andamento-text);
+  background: var(--status-andamento-bg);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  text-align: center;
+}

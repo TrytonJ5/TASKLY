@@ -14,7 +14,8 @@
           formControlName="titulo"
           placeholder="Ex: Revisar proposta do cliente"
         />
-        <span class="field-error" *ngIf="form.get('titulo')?.invalid && form.get('titulo')?.touched">
+        <span class="field-error"
+          *ngIf="form.get('titulo')?.invalid && form.get('titulo')?.touched">
           Título deve ter pelo menos 3 caracteres
         </span>
       </div>
@@ -60,11 +61,19 @@
         </div>
         <div class="field">
           <label for="dataLimite">Data limite</label>
+          <!-- [min] impede selecionar datas passadas no calendário nativo -->
           <input
             id="dataLimite"
             type="date"
             formControlName="dataLimite"
+            [min]="modoEdicao ? '' : dataMinima"
           />
+          <span
+            class="field-error"
+            *ngIf="form.get('dataLimite')?.errors?.['dataNoPassado'] && form.get('dataLimite')?.touched"
+          >
+            A data limite não pode ser no passado
+          </span>
         </div>
       </div>
 
@@ -74,7 +83,11 @@
         <button type="button" class="btn btn-outline" (click)="fechar()">
           Cancelar
         </button>
-        <button type="submit" class="btn btn-primary" [disabled]="carregando()">
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="carregando()"
+        >
           {{ carregando() ? 'Salvando...' : 'Salvar tarefa' }}
         </button>
       </div>

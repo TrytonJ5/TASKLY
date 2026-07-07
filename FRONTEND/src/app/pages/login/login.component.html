@@ -3,6 +3,9 @@
     <h1 class="logo">TASKLY</h1>
     <p class="subtitle">Organize suas tarefas com clareza</p>
 
+    <!-- Aviso contextual: sessão expirada ou cadastro recém-feito -->
+    <p class="aviso" *ngIf="aviso()">{{ aviso() }}</p>
+
     <form [formGroup]="form" (ngSubmit)="entrar()" novalidate>
       <div class="field">
         <label for="email">Email</label>
@@ -43,10 +46,7 @@
       </button>
     </form>
 
-    <button
-      class="btn btn-outline btn-full"
-      routerLink="/cadastro"
-    >
+    <button class="btn btn-outline btn-full" routerLink="/cadastro">
       Criar conta
     </button>
   </div>

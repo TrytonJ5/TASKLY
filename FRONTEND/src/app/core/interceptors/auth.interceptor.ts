@@ -1,19 +1,29 @@
-import { HttpInterceptorFn } from '@angular/common/http';
+import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { catchError, throwError } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 
-// Interceptor funcional (padrão Angular 17+): adiciona o header
-// Authorization em toda requisição que sair da aplicação
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
+  const router = inject(Router);
   const token = authService.obterToken();
 
-  if (token) {
-    const reqAutenticada = req.clone({
-      setHeaders: { Authorization: `Bearer ${token}` },
-    });
-    return next(reqAutenticada);
-  }
+  // Injeta o token em toda requisição autenticada
+  const reqAutenticada = token
+    ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
+    : req;
 
-  return next(req);
+  return next(reqAutenticada).pipe(
+    catchError((erro: HttpErrorResponse) => {
+      // Token expirado ou inválido: limpa a sessão e manda pro login
+      if (erro.status === 401 && authService.estaLogado()) {
+        authService.logout();
+        router.navigate(['/login'], {
+          queryParams: { sessaoExpirada: true },
+        });
+      }
+      return throwError(() => erro);
+    })
+  );
 };

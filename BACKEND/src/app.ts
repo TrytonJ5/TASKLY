@@ -1,22 +1,22 @@
-import express, { Request, Response, Application } from 'express';
-import cors from 'cors';
+import express, { Application } from 'express';
+import { corsOptions } from './shared/infra/http/cors.js';
 import routes from './shared/infra/http/routes.js';
 import { errorMiddleware } from './shared/middlewares/error.middleware.js';
 
-const app: Application = express();
+export function criarApp(): Application {
+  const app = express();
 
-app.use(cors());
-app.use(express.json());
+  app.use(corsOptions);         // CORS configurado — substitui o cors() genérico
+  app.use(express.json());
 
-app.get('/health', (_req: Request, res: Response) => {
-  res.json({ status: 'ok' });
-});
+  app.get('/health', (_req, res) => {
+    res.json({ status: 'ok' });
+  });
 
-// Conecta o hub central de rotas: tudo que estiver em routes.ts
-// (incluindo /auth/registrar e /auth/login) fica acessível em /api/...
-app.use('/api', routes);
+  app.use('/api', routes);
 
-// Sempre por último: captura erros do Zod, ApiError e erros inesperados
-app.use(errorMiddleware);
+  app.use(errorMiddleware);
 
-export default app;
+  return app;
+}
+
