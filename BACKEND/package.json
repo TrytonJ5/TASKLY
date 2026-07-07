@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "npx nodemon --exec tsx --env-file=.env src/server.ts --watch 'src/' -e ts",
-    "compile": "npx tsc",
-    "start": "node ./dist/server.js"
+    "build": "npx tsc",
+    "start": "tsx src/server.ts",
+    "lint": "eslint . --ext .ts"
   },
   "keywords": [],
   "author": "",
