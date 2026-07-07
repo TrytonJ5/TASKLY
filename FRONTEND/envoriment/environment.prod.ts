@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://SEU_BACKEND_URL/api', // Trocar pela URL do Render/Railway após deploy
+  apiUrl: 'https://taskly-production-2b84.up.railway.app/api', // Trocar pela URL do Render/Railway após deploy
 };
